@@ -20,8 +20,7 @@ match priority:
 
 # Add time-bound note with conditional statements
 if time_bound == "yes":
-    reminder += " This task requires immediate attention today!"
+    reminder += " That requires immediate attention today!"
 
 # Output the customized reminder
 print(reminder)
-print("that requires immediate attention today!")
