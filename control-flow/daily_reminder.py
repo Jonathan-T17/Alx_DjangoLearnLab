@@ -14,13 +14,15 @@ match priority:
     case "medium":
         reminder = f"Reminder: '{task}' is a medium priority task"
     case "low":
-        reminder = f"Note: '{task}' is a low priority task. Consider completing it when you have free time."
+        reminder = f"Reminder: '{task}' is a low priority task"
     case _:
         reminder = f"Reminder: '{task}' has an unknown priority level"
 
 # Add time-bound note with conditional statements
 if time_bound == "yes":
-   message = " that requires immediate attention today!"
+    reminder += " that requires immediate attention today!"
+elif priority == "low":
+    reminder += ". Consider completing it when you have free time."
 
-# ✅ Print final reminder
-print(reminder + message)
+# ✅ Print final reminder to the user
+print(reminder)
