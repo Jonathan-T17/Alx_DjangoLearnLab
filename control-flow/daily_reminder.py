@@ -20,7 +20,7 @@ match priority:
 
 # Add time-bound note with conditional statements
 if time_bound == "yes":
-    reminder += " that requires immediate attention today!"
+   message = " that requires immediate attention today!"
 
 # ✅ Print final reminder
-print(reminder)
+print(reminder + message)
