@@ -24,3 +24,4 @@ if time_bound == "yes":
 
 # Output the customized reminder
 print(reminder)
+print("that requires immediate attention today!")
