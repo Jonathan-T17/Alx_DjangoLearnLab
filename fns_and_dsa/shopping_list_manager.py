@@ -12,12 +12,12 @@ def main():
     shopping_list = []
     while True:
         display_menu()
-        choice = input("\nChoose an option (1-4): ").strip()
+        choice = input("Choose an option (1-4): ").strip()
         if choice == "1":
             item = input("Enter an item to add: ").strip()
             if item:
                 shopping_list.append(item)
-                print(f"'\n{item}' has been added to the shopping list.")
+                print(f"'{item}' has been added to the shopping list.")
             else:
                 print("Item cannot be empty.")
         elif choice == "2":
