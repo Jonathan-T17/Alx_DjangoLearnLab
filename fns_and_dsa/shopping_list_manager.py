@@ -21,7 +21,7 @@ def main():
             else:
                 print("Item cannot be empty.")
         elif choice == "2":
-            item = input("\nEnter an item to remove: ").strip()
+            item = input("Enter an item to remove: ").strip()
             if item:
                 if item in shopping_list:
                     shopping_list.remove(item)
@@ -32,13 +32,13 @@ def main():
                 print("Item cannot be empty.")
         elif choice == "3":
             if shopping_list:
-                print("\n=====Current Shopping List of Items======")
+                print("=====Current Shopping List of Items======")
                 for index, item in enumerate(shopping_list):
                     print(f"{index + 1}. {item}")
             else:
                 print("The shopping list is currently empty.")
         elif choice == "4":
-            print("\nExiting the Shopping List Manager...")
+            print("Exiting the Shopping List Manager...")
             print("Goodbye!")
             break
         else:
