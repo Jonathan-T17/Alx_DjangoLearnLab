@@ -1,5 +1,6 @@
 # Shopping List Manager
 
+# display menu function
 def display_menu():
     # Display the shopping list menu.
     print("Shopping List Manager")

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-# Current date and time
+# Current date and time function
 def display_current_datetime():
     """Display the current date and time in YYYY-MM-DD HH:MM:SS format."""
     current_date = datetime.now()
@@ -8,7 +8,7 @@ def display_current_datetime():
     print("Current Date and Time:", current_date.strftime(date_format))
     return current_date  # return so we can reuse it later
 
-# Calculate a future date
+# Calculate a future date function
 def calculate_future_date(current_date):
     """Calculate and display the future date after adding user-specified days."""
     try:

@@ -1,5 +1,5 @@
 from arithmetic_operations import perform_operation
-
+# Main function
 def main():
     print("Arithmetic Operations")
     num1 = float(input("Enter the first number: "))
