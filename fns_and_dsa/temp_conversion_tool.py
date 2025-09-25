@@ -23,7 +23,7 @@ def main():
     try:
         # User input for temperature conversion
         temp_f = float(input("Enter temperature in Fahrenheit: "))
-        unit = input("Convert to (C)elsius or (F)ahrenheit? (C/F): ").strip().upper()
+        unit = input(" Is this temperature in Celsius or Fahrenheit? (C/F): ").strip().upper()
 
         if unit == "C":
             temp_c = convert_to_celsius(temp_f)
