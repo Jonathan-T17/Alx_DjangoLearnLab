@@ -12,16 +12,16 @@ def main():
     shopping_list = []
     while True:
         display_menu()
-        choice = input("Choose an option (1-4): ").strip()
+        choice = input("\nChoose an option (1-4): ").strip()
         if choice == "1":
-            item = input("Enter the item to add: ").strip()
+            item = input("\nEnter the item to add: ").strip()
             if item:
                 shopping_list.append(item)
-                print(f"'{item}' has been added to the shopping list.")
+                print(f"'\n{item}' has been added to the shopping list.")
             else:
                 print("Item cannot be empty.")
         elif choice == "2":
-            item = input("Enter the item to remove: ").strip()
+            item = input("\nEnter an item to remove: ").strip()
             if item:
                 if item in shopping_list:
                     shopping_list.remove(item)
@@ -32,13 +32,13 @@ def main():
                 print("Item cannot be empty.")
         elif choice == "3":
             if shopping_list:
-                print("=====Current Shopping List of Items======")
+                print("\n=====Current Shopping List of Items======")
                 for index, item in enumerate(shopping_list):
                     print(f"{index + 1}. {item}")
             else:
                 print("The shopping list is currently empty.")
         elif choice == "4":
-            print("Exiting the Shopping List Manager...")
+            print("\nExiting the Shopping List Manager...")
             print("Goodbye!")
             break
         else:
