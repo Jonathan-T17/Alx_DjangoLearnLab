@@ -37,7 +37,7 @@ def main():
             print("Invalid choice. Please enter 'C' or 'F'.")
 
     except ValueError:
-        # Handle invalid numeric input
+        # Handle invalid numeric user input
         print("Invalid temperature. Please enter a numeric value.")
 if __name__ == "__main__":
     main()
