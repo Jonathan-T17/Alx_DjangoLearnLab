@@ -17,13 +17,13 @@ class BankAccount:
     # Deduct the amount from account_balance if funds are sufficient
     def withdraw(self, amount):
         if amount <=0:
-            print("Insufficient funds for this withdrawal.")
+            print("Withdrawal amount must be positive")
             return False
         elif amount <= self.account_balance:
             self.account_balance -= amount
             return True
         else:
-            print("Insufficient funds.")
+            print("Insufficient funds for this withdrawal.")
             return False
         
     # Print the current balance in a user-friendly format
