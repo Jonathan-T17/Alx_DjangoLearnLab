@@ -23,7 +23,6 @@ class BankAccount:
             self.account_balance -= amount
             return True
         else:
-            print("Insufficient funds for this withdrawal.")
             return False
         
     # Print the current balance in a user-friendly format
