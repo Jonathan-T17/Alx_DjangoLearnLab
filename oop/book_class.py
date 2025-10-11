@@ -18,9 +18,20 @@ class Book:
     
     def __str__(self):
         """String representation - user-friendly format"""
-        return f"{self.title} by {self.author} , published in {self.year}"
+        return f"{self.title} by {self.author}, published in {self.year}"
     
 
     def __repr__(self):
         """Official representation - should recreate the object"""
         return f"Book('{self.title}', '{self.author}', {self.year})"
+    
+
+"""
+1984 by George Orwell , published in 1949
+Book('1984', 'George Orwell', 1949)
+Deleting 1984
+
+1984 by George Orwell, published in 1949
+Book('1984', 'George Orwell', 1949)
+Deleting 1984
+"""

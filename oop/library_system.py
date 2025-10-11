@@ -1,23 +1,34 @@
 class Book:
     """Base class representing a generic Book"""
 
-    def __init__(self, title:str, author:str):
+    def __init__(self, title: str, author: str):
         """Initialize book with title and author"""
         self.title = title
         self.author = author
 
+    def __str__(self):
+        """String representation of Book"""
+        return f"Book: {self.title} by {self.author}"
+
 
 class EBook(Book):
-    def __init__(self, title:str, author:str, file_size:int):
+    def __init__(self, title: str, author: str, file_size: int):
         super().__init__(title, author)
         self.file_size = file_size
 
+    def __str__(self):
+        """String representation of EBook"""
+        return f"EBook: {self.title} by {self.author}, File Size: {self.file_size}KB"
 
 
 class PrintBook(Book):
-    def __init__(self, title:str, author:str, page_count:int):
+    def __init__(self, title: str, author: str, page_count: int):
         super().__init__(title, author)
         self.page_count = page_count
+
+    def __str__(self):
+        """String representation of PrintBook"""
+        return f"PrintBook: {self.title} by {self.author}, Page Count: {self.page_count}"
 
 
 class Library:
@@ -32,11 +43,4 @@ class Library:
     
     def list_books(self):
         for book in self.books:
-            if isinstance(book, EBook):
-                print(f"EBook: {book.title} by {book.author}, File Size: {book.file_size}KB")
-
-            elif isinstance(book, PrintBook):
-                print(f"PrintBook: {book.title} by {book.author}, Page Count: {book.page_count}")
-
-            else:
-                print(f"Book: {book.title} by {book.author}")
+            print(book)  # This will automatically call the appropriate __str__ method
