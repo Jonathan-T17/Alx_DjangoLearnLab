@@ -2,9 +2,9 @@ import math
 
 class Shape:
     """Exercise1: single Inheritance"""
-    def calculate_area():
-        NotImplementedError("rectangle must calculate area")
-    
+    def calculate_area(self):
+        raise NotImplementedError("Subclasses must implement calculate_area")
+
 class Rectangle(Shape):
     def __init__(self, length, width):
         self.length = length

@@ -1,3 +1,6 @@
+from typing import Union
+
+
 class Book:
     """Base class representing a generic Book"""
 
@@ -35,7 +38,7 @@ class Library:
     def __init__(self):
         self.books = []
 
-    def add_book(self, book: Book | EBook | PrintBook):
+    def add_book(self, book: Union[Book, EBook, PrintBook]):
         self.books.append(book)
     
     # def remove_book(self, book:Book):
