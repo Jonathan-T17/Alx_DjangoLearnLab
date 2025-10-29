@@ -2,7 +2,7 @@
 
 book.delete()
 
-## Confirm deletion
+## Confirm deletion by execute the following
 
 Book.objects.all()
 
