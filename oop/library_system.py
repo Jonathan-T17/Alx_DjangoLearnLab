@@ -1,6 +1,3 @@
-from typing import Union
-
-
 class Book:
     """Base class representing a generic Book"""
 
