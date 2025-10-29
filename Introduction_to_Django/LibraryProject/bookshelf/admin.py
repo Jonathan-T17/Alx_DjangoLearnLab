@@ -11,5 +11,5 @@ class BookAdmin(admin.ModelAdmin):
      # Filters for better admin interface
     list_filter = ('publication_year', 'author')
 
-    # Enable search capabilities
+    # Enable search capabilities for admin
     search_fields = ('title', 'author')

@@ -11,7 +11,7 @@ A basic Django project setup for learning purposes.
 
  Utilizing the Django Admin Interface**
 
-### **Objective**
+## **Objective**
 
 Configure the Django Admin to manage the `Book` model from the `bookshelf` app.
 
