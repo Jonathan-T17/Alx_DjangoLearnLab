@@ -1,4 +1,6 @@
-# Delete the Book instance
+# from bookshelf.models import Book
+
+## Delete the Book instance
 
 book.delete()
 
