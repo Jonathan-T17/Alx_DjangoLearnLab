@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Book, Library, Author, UserProfile
+from .models import Book, Author, UserProfile
+from .models import Library
+
 from django.views.generic import DetailView
 
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import  UserCreationForm
+
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import  UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.decorators import permission_required
@@ -24,7 +27,7 @@ def list_books(request):
 
 class LibraryDetailView(DetailView):
     model = Library
-    templete_name = 'library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
 
