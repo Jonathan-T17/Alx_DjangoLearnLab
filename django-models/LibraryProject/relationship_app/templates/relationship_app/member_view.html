@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard</title>
+</head>
+<body>
+    <h1>Member Dashboard</h1>
+
+    <h1>Welcome, {{ user.username }} (Member)</h1>
+    <p>Explore available books and borrow from the library.</p>
+    
+
+    <ul>
+        <li>Browse available books</li>
+        <li>Check out books</li>
+        <li>View borrowing history</li>
+        <li>Update personal information</li>
+    </ul>
+    <a href="{% url 'list_books' %}">Back to Books</a>
+    
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h1>Welcome, {{ user.username }} (Admin)</h1>
+    <p>You have full access to manage the system.</p>
+
+    
+    <ul>
+        <li>Manage all users</li>
+        <li>Configure system settings</li>
+        <li>Access all library data</li>
+        <li>Manage librarians and members</li>
+    </ul>
+    <a href="{% url 'list_books' %}">Back to Books</a><br><br>
+
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

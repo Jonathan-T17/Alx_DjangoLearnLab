@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book</title>
+</head>
+<body>
+    <h1>Edit Book: {{ book.title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>Title:</label>
+        <input type="text" name="title" value="{{ book.title }}" required placeholder="Enter book title" title="Book Title"><br><br>
+        <label>Author:</label>
+        <input type="text" name="author" value="{{ book.author.name }}" required placeholder="Enter author name" title="Author Name"><br><br>
+        <button type="submit">Update</button>
+    </form>
+    <a href="{% url 'list_books' %}">Back to Book List</a>
+</body>
+</html>
