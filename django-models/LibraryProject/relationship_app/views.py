@@ -4,9 +4,11 @@ from .models import Book, Library, Author, UserProfile
 from django.views.generic import DetailView
 
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import  UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
+from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import permission_required
 
 
 
@@ -15,7 +17,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required, per
 # Function-Based View: List all books
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'list_books.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
 
 # Class-Based View: Display details for a specific library
