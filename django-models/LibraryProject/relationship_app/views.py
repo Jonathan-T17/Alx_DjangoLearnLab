@@ -43,10 +43,13 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Registered successful!")
+            messages.success(request, "Registration successful!")
             return redirect('list_books')
         else:
-            form = UserCreationForm()
+            messages.error(request, "Registration failed. Please correct the errors below.")
+    else:
+        form = UserCreationForm()
+    
     return render(request, 'relationship_app/register.html', {'form': form})
 
 
@@ -67,8 +70,10 @@ def login_view(request):
             else:
                 messages.error(request, "Invalid username or Password.")
         else:
-            form = AuthenticationForm()
-            return render(request, 'relationship_app/login.html', {'form': form})
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+        return render(request, 'relationship_app/login.html', {'form': form})
         
 
 
