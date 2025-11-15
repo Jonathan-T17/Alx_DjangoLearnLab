@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }}</title>
+    <style>
+        .form-container { max-width: 500px; margin: 20px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-control { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            box-sizing: border-box;
+        }
+        .error { color: red; font-size: 0.9em; }
+        .btn { 
+            padding: 10px 20px; 
+            background: #007cba; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+        }
+        .btn:hover { background: #005a87; }
+        .messages { margin: 10px 0; }
+        .success { color: green; background: #d4edda; padding: 10px; border-radius: 4px; }
+        .error { color: #721c24; background: #f8d7da; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>{{ title }}</h1>
+        
+        <!-- Display messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: #666;">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="error">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn">{{ submit_text }}</button>
+            <a href="{% url 'bookshelf:book_list' %}" style="margin-left: 10px;">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,25 +21,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t@(778cke_*1=enox*u=rny(zjzmsf4g5=rc=0la#cgs=l4qzz'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-t@(778cke_*1=enox*u=rny(zjzmsf4g5=rc=0la#cgs=l4qzz')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'bookshelf',
+    'relationship_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',
-    'relationship_app',
+    'csp',
+    
 ]
 
 MIDDLEWARE = [
@@ -49,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -60,9 +64,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'bookshelf.views.permission_context',
             ],
         },
     },
@@ -126,3 +132,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'list_books'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+
+
+
+
+
+# Browser protections
+# Security headers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking by denying framing
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser XSS protection
+SECURE_REFERRER_POLICY = 'same-origin'  # Control referrer information
+
+# Cookie security
+CSRF_COOKIE_SECURE = True         # only send CSRF cookie over HTTPS
+SESSION_COOKIE_SECURE = True      # only send session cookie over HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to session cookies
+CSRF_COOKIE_HTTPONLY = False       # not accessible to JavaScript (optional but helpful)
+
+# HSTS - only enable when you have HTTPS
+SECURE_HSTS_SECONDS = 31536000    # one year; use 0 or remove in dev
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Additional security settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Important when behind a proxy
+
+# Content Security Policy (CSP) header (if not using django-csp)
+# If you use django-csp package, configure CSP_* settings instead (see Step 4)
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # avoid 'unsafe-inline' ideally
+
+
