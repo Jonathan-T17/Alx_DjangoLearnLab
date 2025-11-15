@@ -1,63 +1,74 @@
-# bookshelf/forms.py
-from django import forms
-from .models import Book
+from django.db import models
 
-class ExampleForm(forms.ModelForm):
-    """
-    ExampleForm for creating and editing Book instances
-    This form demonstrates Django form capabilities with custom validation
-    """
-    
+
+from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.utils.translation import gettext_lazy as _
+
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
+
+# -------------------------
+# Custom User Manager
+# -------------------------
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email=None, password=None, date_of_birth=None, **extra_fields):
+        if not username:
+            raise ValueError("Users must have a username")
+
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+            date_of_birth=date_of_birth,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email=None, password=None, date_of_birth=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True')
+
+        return self.create_user(
+            username=username,
+            email=email,
+            password=password,
+            date_of_birth=date_of_birth,
+            **extra_fields
+        )
+
+
+# -------------------------
+# Custom User Model
+# -------------------------
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True, help_text=_('Format: YYYY-MM-DD'))
+    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True, help_text=_('Upload a profile photo'))
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.username
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    publication_year = models.IntegerField()
+
     class Meta:
-        model = Book
-        fields = ['title', 'author', 'publication_year']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter book title'
-            }),
-            'author': forms.TextInput(attrs={
-                'class': 'form-control', 
-                'placeholder': 'Enter author name'
-            }),
-            'publication_year': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter publication year',
-                'min': 1000,
-                'max': 2030
-            })
-        }
-        labels = {
-            'title': 'Book Title',
-            'author': 'Author Name',
-            'publication_year': 'Publication Year'
-        }
-        help_texts = {
-            'publication_year': 'Enter a valid year (e.g., 2023)'
-        }
+        permissions = [
+            ("can_view", "Can view books"),
+            ("can_create", "Can create books"),
+            ("can_edit", "Can edit books"),
+            ("can_delete", "Can delete books"),
+        ]
     
-    def clean_publication_year(self):
-        """Validate publication year"""
-        year = self.cleaned_data.get('publication_year')
-        if year and (year < 1000 or year > 2030):
-            raise forms.ValidationError("Please enter a valid year between 1000 and 2030.")
-        return year
+    def __str__(self):
+        return f"{self.title} by {self.author} ({self.publication_year})"
     
-    def clean_title(self):
-        """Validate title - ensure it's not empty and has reasonable length"""
-        title = self.cleaned_data.get('title')
-        if title and len(title.strip()) < 2:
-            raise forms.ValidationError("Title must be at least 2 characters long.")
-        return title.strip()
-
-    def clean_author(self):
-        """Validate author name"""
-        author = self.cleaned_data.get('author')
-        if author and len(author.strip()) < 2:
-            raise forms.ValidationError("Author name must be at least 2 characters long.")
-        return author.strip()
-
-# Keep the original BookForm for backward compatibility
-class BookForm(ExampleForm):
-    """Alias for ExampleForm to maintain compatibility with existing code"""
-    pass
