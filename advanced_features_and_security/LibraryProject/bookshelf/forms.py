@@ -56,8 +56,3 @@ class ExampleForm(forms.ModelForm):
         if author and len(author.strip()) < 2:
             raise forms.ValidationError("Author name must be at least 2 characters long.")
         return author.strip()
-
-# Keep the original BookForm for backward compatibility
-class BookForm(ExampleForm):
-    """Alias for ExampleForm to maintain compatibility with existing code"""
-    pass
