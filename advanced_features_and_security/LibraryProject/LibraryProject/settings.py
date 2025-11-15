@@ -151,6 +151,8 @@ X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking by denying framing
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
 SECURE_BROWSER_XSS_FILTER = True  # Enable browser XSS protection
 SECURE_REFERRER_POLICY = 'same-origin'  # Control referrer information
+SECURE_SSL_REDIRECT = True
+
 
 # Cookie security
 CSRF_COOKIE_SECURE = True         # only send CSRF cookie over HTTPS
