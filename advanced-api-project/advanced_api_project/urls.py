@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Include API app URLs and it makes endpoints available under /api/
-    path('api/', include('api.urls')),  
+    path('api/', include(('api.urls', 'api'), namespace='api')),  
 ]

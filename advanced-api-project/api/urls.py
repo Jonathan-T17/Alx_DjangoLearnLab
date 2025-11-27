@@ -7,6 +7,8 @@ from .views import (
     BookDeleteView
 )
 
+app_name = "api"
+
 urlpatterns = [
     # List all books (GET)
     path('books/', BookListView.as_view(), name='book-list'),
