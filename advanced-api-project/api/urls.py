@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    BookListCreateView,
     BookListView,
     BookDetailView,
     BookCreateView,
@@ -24,5 +25,9 @@ urlpatterns = [
 
 
     # Delete view (DELETE)
-    path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete')
+    path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete'),
+    
+    # Combined List and Create view (GET, POST)
+    path('books-combined/', BookListCreateView.as_view(), name='book-list-create'),
+
 ]
