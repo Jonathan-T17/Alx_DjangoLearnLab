@@ -3,31 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    
     <title>{% block title %}Django Blog{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'blog/static/css/styles.css' %}">
 </head>
 <body>
+
+    <!-- HEADER / NAVBAR -->
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'posts' %}">Blog Posts</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'register' %}">Register</a></li>
+
+                <!-- HOME -->
+                <li><a href="{% url 'blog:home' %}">Home</a></li>
+
+                <!-- BLOG POSTS (will exist later) -->
+                <li><a href="{% url 'blog:posts' %}">Blog Posts</a></li>
+
+                {% if user.is_authenticated %}
+                    <!-- LOGGED IN VIEW -->
+                    <li><a href="{% url 'blog:profile' %}">Profile</a></li>
+                    <li><a href="{% url 'blog:logout' %}">Logout</a></li>
+                {% else %}
+                    <!-- GUEST VIEW -->
+                    <li><a href="{% url 'blog:login' %}">Login</a></li>
+                    <li><a href="{% url 'blog:register' %}">Register</a></li>
+                {% endif %}
+
             </ul>
         </nav>
     </header>
 
-    <div class="content">
-        {% block content %}
-        <!-- Page-specific content goes here -->
-        {% endblock %}
-    </div>
 
+    <!-- MAIN PAGE CONTENT -->
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2024 Django Blog</p>
+        <p>&copy; {{ now|date:"Y" }} Django Blog</p>
     </footer>
 
-    <script src="{% static 'js/scripts.js' %}"></script>
+    <!-- JS FILE -->
+    <script src="{% static 'blog/js/scripts.js' %}"></script>
 </body>
 </html>

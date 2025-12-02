@@ -1,0 +1,200 @@
+django_blog – User Authentication System Documentation
+
+This document explains how the User Authentication System was implemented in the django_blog project as part of Task 1.
+It includes setup, configuration, file structure, and usage instructions for registration, login, logout, and user profile management.
+
+📌 Overview
+
+The authentication system includes:
+
+User Registration (custom form)
+
+User Login (Django built-in view)
+
+User Logout
+
+User Profile Page
+
+Profile Editing (username + email)
+
+CSRF protection enabled by default
+
+Access restrictions for authenticated pages
+
+All features follow Django’s security best practices.
+
+📁 Project Structure (Relevant Files Only)
+django_blog/
+│
+├── django_blog/
+│   ├── settings.py
+│   └── urls.py
+│
+├── blog/
+│   ├── views.py
+│   ├── forms.py
+│   ├── urls.py
+│   ├── models.py
+│   ├── templates/
+│   │   └── blog/
+│   │       ├── login.html
+│   │       ├── logout.html
+│   │       ├── register.html
+│   │       └── profile.html
+│   └── admin.py
+│
+└── manage.py
+
+⚙️ 1. Authentication Forms
+
+File: blog/forms.py
+
+UserRegisterForm extends UserCreationForm
+
+Adds an email field
+
+UserUpdateForm allows profile editing
+
+🧠 2. Authentication Views
+
+File: blog/views.py
+
+Includes:
+
+UserLoginView – Login page
+
+UserLogoutView – Logout confirmation
+
+register() – Register new users
+
+profile() – View and edit profile (requires login)
+
+Django automatically handles:
+
+password hashing
+
+CSRF protection
+
+session management
+
+🌐 3. URL Configuration
+
+File: blog/urls.py
+
+Defines:
+
+/login/
+
+/logout/
+
+/register/
+
+/profile/
+
+These URLs link to the views described above.
+
+🎨 4. Authentication Templates
+
+Located in:
+
+blog/templates/blog/
+
+
+Templates created:
+
+login.html
+
+User login page.
+
+logout.html
+
+Displays logout confirmation.
+
+register.html
+
+User signup page with form validation.
+
+profile.html
+
+Users can view and update their profile.
+
+All templates use form.as_p for structured field rendering and include CSRF tokens.
+
+🔐 5. Authentication Settings
+
+In django_blog/settings.py, we added:
+
+LOGIN_REDIRECT_URL = "blog:profile"
+LOGOUT_REDIRECT_URL = "blog:login"
+LOGIN_URL = "blog:login"
+
+
+This ensures:
+
+After login → redirect to profile
+
+After logout → redirect to login
+
+If unauthorized access → redirect to login
+
+🧪 6. Testing Instructions
+Start the development server:
+python manage.py runserver
+
+Test Manually:
+1. Registration
+
+Visit:
+➡ http://127.0.0.1:8000/register/
+
+Enter username, email, password.
+✔ Should redirect to profile page.
+
+2. Login
+
+➡ http://127.0.0.1:8000/login/
+
+Enter credentials.
+✔ Redirects to profile.
+
+3. Logout
+
+➡ http://127.0.0.1:8000/logout/
+
+✔ Shows logout confirmation page.
+
+4. Profile
+
+➡ http://127.0.0.1:8000/profile/
+(Requires login)
+
+✔ Update username & email
+✔ CSRF-protected form
+
+🔒 7. Security Considerations
+
+The authentication implementation uses Django’s built-in security features:
+
+Password hashing (PBKDF2 by default)
+
+CSRF protection on all POST forms
+
+Session-based authentication
+
+Access control using @login_required
+
+Form validation to prevent invalid data submission
+
+📘 8. How to Extend the System (Optional Enhancements)
+
+You may optionally extend the user profile with:
+
+Profile picture
+
+Bio / About section
+
+Phone number
+
+Social links
+
+Custom user model
