@@ -198,3 +198,39 @@ Phone number
 Social links
 
 Custom user model
+
+
+## Blog Post Management (CRUD)
+
+Routes:
+
+- List all posts: `/posts/`
+- Create new post: `/posts/new/` (authenticated)
+- Post detail: `/posts/<pk>/`
+- Edit post: `/posts/<pk>/edit/` (author only)
+- Delete post: `/posts/<pk>/delete/` (author only)
+
+Permissions:
+
+- Anyone can view list and details.
+- Only logged-in users can create posts.
+- Only the post author can edit or delete.
+
+Forms:
+
+- Post creation and editing use `blog/forms.py` => `PostForm`.
+- Author is set automatically in the `PostCreateView`.
+
+Templates:
+
+- `post_list.html`, `post_detail.html`, `post_form.html`, `post_confirm_delete.html` located at `blog/templates/blog/`.
+
+Testing:
+
+- Manual tests: run server and exercise each page.
+- Automated tests: `python manage.py test blog`.
+
+Notes:
+
+- All write actions are CSRF-protected.
+- Ensure your `base.html` includes links for login/logout and creating a post when authenticated.

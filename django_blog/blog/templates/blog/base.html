@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     
-    <title>{% block title %}Django Blog{% endblock %}</title>
+    <title>{% block title %}Blog{% endblock %}</title>
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="{% static 'blog/static/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'static/css/styles.css' %}">
 </head>
 <body>
 
@@ -18,10 +18,10 @@
             <ul>
 
                 <!-- HOME -->
-                <li><a href="{% url 'blog:home' %}">Home</a></li>
+                <li><a href="{% url 'blog:post_list' %}">Home</a></li>
 
                 <!-- BLOG POSTS (will exist later) -->
-                <li><a href="{% url 'blog:posts' %}">Blog Posts</a></li>
+                <li><a href="{% url 'blog:post_list' %}">Blog Posts</a></li>
 
                 {% if user.is_authenticated %}
                     <!-- LOGGED IN VIEW -->
@@ -51,6 +51,6 @@
     </footer>
 
     <!-- JS FILE -->
-    <script src="{% static 'blog/js/scripts.js' %}"></script>
+    <script src="{% static 'static/js/scripts.js' %}"></script>
 </body>
 </html>
