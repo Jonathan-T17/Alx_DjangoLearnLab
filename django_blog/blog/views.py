@@ -12,7 +12,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from .models import Post, Comment
+from .models import Post, Comment, Tag
+from django.db.models import Q
 from .forms import PostForm, CommentForm
 
 
@@ -64,6 +65,44 @@ def profile(request):
 
 
 
+class SearchResultsView(ListView):
+    model = Post
+    template_name = "blog/search_results.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", "")
+        return Post.objects.filter(
+            Q(title__icontains=query)
+            | Q(content__icontains=query)
+            | Q(tags__name__icontains=query)
+            | Q(author__username__icontains=query)   # search by author username
+        ).distinct()
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["query"] = self.request.GET.get("q", "")
+        return ctx
+
+
+
+
+class TagPostListView(ListView):
+    model = Post
+    template_name = "blog/tag_posts.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        tag_name = self.kwargs["tag_name"]
+        return Post.objects.filter(tags__name__iexact=tag_name)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["tag_name"] = self.kwargs["tag_name"]
+        return ctx
+    
+
+
 
 # ListView - public
 class PostListView(ListView):
@@ -72,6 +111,9 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-published_date']
     paginate_by = 5  # optional pagination
+
+
+    
 
 # DetailView - public
 class PostDetailView(DetailView):

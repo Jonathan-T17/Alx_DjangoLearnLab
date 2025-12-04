@@ -218,3 +218,18 @@ Notes:
 - Delete comment: `/comment/<pk>/delete/` (only comment author).
 - Only authenticated users can create comments.
 - Comments are listed on the post detail page; newest comments appear last (ordered by created_at).
+
+### Tagging Feature
+
+- Posts now support multiple tags.
+- Tags are added via the “Tags (comma separated)” field in the post form.
+- Tags appear on each post detail page.
+- Clicking a tag filters posts by that tag: /tags/<tag_name>/
+
+### Search Feature
+
+- Search bar in the navigation enables searching by:
+  • title
+  • content
+  • tag names
+- Search results at /search/?q=keyword

@@ -224,3 +224,13 @@ table tr:nth-child(even) {
         padding: 10px;
     }
 }
+
+
+
+
+.tag {
+    background: #eef;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+}

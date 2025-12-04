@@ -4,21 +4,38 @@ from django.urls import reverse
 
 from django.conf import settings
 from django.utils import timezone
+# from django.contrib.auth import get_user_model
+
 
 # Create your models here.
+# User = get_user_model()
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+    
+
+
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
+    tags = models.ManyToManyField(Tag, blank=True, related_name="posts")  # tagging support
 
     def __str__(self):
         return self.title
     
 
     def get_absolute_url(self):
-        return reverse('blog:post_detail', args=[str(self.id)])
+        return reverse('blog:post_detail', kwargs={"pk": self.pk})
     
 
     def get_snippet(self, length=200):

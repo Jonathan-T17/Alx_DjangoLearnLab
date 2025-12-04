@@ -1,13 +1,22 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    {% load static %}
-
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
 <article>
   <h1>{{ post.title }}</h1>
   <p class="meta">By {{ post.author.username }} — {{ post.published_date|date:"Y-m-d H:i" }}</p>
   <div class="content">{{ post.content|linebreaks }}</div>
+
+  <!-- TAGS SECTION -->
+  <h3>Tags:</h3>
+  {% if post.tags.all %}
+    {% for tag in post.tags.all %}
+      <a href="{% url 'blog:tag_posts' tag.name %}" class="tag">#{{ tag.name }}</a>
+    {% endfor %}
+  {% else %}
+    <p>No tags</p>
+  {% endif %}
 
   {% if user == post.author %}
     <p>
@@ -27,7 +36,6 @@
 <!-- Comments List -->
 <div class="card mt-20">
   <h2>Comments ({{ post.comments.count }})</h2>
-
   {% for comment in post.comments.all %}
     <div id="comment-{{ comment.pk }}" class="post-item">
       <p class="post-meta">
@@ -37,7 +45,6 @@
         {% endif %}
       </p>
       <p>{{ comment.content|linebreaks }}</p>
-
       {% if user.is_authenticated and user == comment.author %}
         <p>
           <a class="btn" href="{% url 'blog:comment-update' comment.pk %}">Edit</a>
@@ -65,5 +72,4 @@
     <p><a href="{% url 'blog:login' %}">Log in</a> to post a comment.</p>
   </div>
 {% endif %}
-
 {% endblock %}
