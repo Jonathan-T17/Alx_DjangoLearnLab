@@ -4,21 +4,30 @@ from django.urls import reverse
 
 from django.conf import settings
 from django.utils import timezone
-# from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 
 
 # Create your models here.
-# User = get_user_model()
-
+User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Auto-generate slug from name if not provided
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
     
 
 
@@ -57,3 +66,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+    
+
+
+
+
+
+
+

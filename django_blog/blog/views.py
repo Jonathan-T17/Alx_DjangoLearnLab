@@ -15,6 +15,8 @@ from django.urls import reverse_lazy, reverse
 from .models import Post, Comment, Tag
 from django.db.models import Q
 from .forms import PostForm, CommentForm
+from django.views.generic import ListView
+
 
 
 class UserLoginView(LoginView):
@@ -211,3 +213,22 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return comment.author == self.request.user
+
+
+
+
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = "blog/tag_posts.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get("tag_slug")
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags=tag).select_related("author").prefetch_related("tags")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["tag"] = get_object_or_404(Tag, slug=self.kwargs.get("tag_slug"))
+        return ctx
