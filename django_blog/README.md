@@ -1,4 +1,6 @@
-django_blog – User Authentication System Documentation
+# django_blog
+
+ User Authentication System Documentation
 
 This document explains how the User Authentication System was implemented in the django_blog project as part of Task 1.
 It includes setup, configuration, file structure, and usage instructions for registration, login, logout, and user profile management.
@@ -99,7 +101,6 @@ Located in:
 
 blog/templates/blog/
 
-
 Templates created:
 
 login.html
@@ -128,7 +129,6 @@ LOGIN_REDIRECT_URL = "blog:profile"
 LOGOUT_REDIRECT_URL = "blog:login"
 LOGIN_URL = "blog:login"
 
-
 This ensures:
 
 After login → redirect to profile
@@ -141,32 +141,9 @@ If unauthorized access → redirect to login
 Start the development server:
 python manage.py runserver
 
-Test Manually:
-1. Registration
-
-Visit:
-➡ http://127.0.0.1:8000/register/
-
-Enter username, email, password.
-✔ Should redirect to profile page.
-
-2. Login
-
-➡ http://127.0.0.1:8000/login/
-
-Enter credentials.
-✔ Redirects to profile.
-
-3. Logout
-
-➡ http://127.0.0.1:8000/logout/
-
-✔ Shows logout confirmation page.
-
-4. Profile
-
-➡ http://127.0.0.1:8000/profile/
-(Requires login)
+1.register
+2. login
+3.update the profile
 
 ✔ Update username & email
 ✔ CSRF-protected form
@@ -198,7 +175,6 @@ Phone number
 Social links
 
 Custom user model
-
 
 ## Blog Post Management (CRUD)
 
@@ -234,3 +210,11 @@ Notes:
 
 - All write actions are CSRF-protected.
 - Ensure your `base.html` includes links for login/logout and creating a post when authenticated.
+
+### Comment System
+
+- Add comment: POST to `/post/<post_pk>/comments/new/` (form located on the post detail page).
+- Edit comment: `/comment/<pk>/edit/` (only comment author).
+- Delete comment: `/comment/<pk>/delete/` (only comment author).
+- Only authenticated users can create comments.
+- Comments are listed on the post detail page; newest comments appear last (ordered by created_at).

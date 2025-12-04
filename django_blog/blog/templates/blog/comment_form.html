@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<div class="card">
+  <h2>Edit Comment</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Save</button>
+    <a href="{% url 'blog:post_detail' form.instance.post.pk %}" class="btn">Cancel</a>
+  </form>
+</div>
+{% endblock %}

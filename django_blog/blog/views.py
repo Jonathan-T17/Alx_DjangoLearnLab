@@ -3,14 +3,16 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import UserRegisterForm, UserUpdateForm
+from .models import Post, Comment
 
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
-from .models import Post
-from .forms import PostForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 
 
 class UserLoginView(LoginView):
@@ -37,8 +39,13 @@ def register(request):
         form = UserRegisterForm()
     return render(request, "blog/register.html", {"form": form})
 
-def home(request):
-    return render(request, "blog/base.html")
+
+
+def base(request):
+    # Fetch latest posts (you can adjust ordering/limit)
+    posts = Post.objects.order_by('-published_date')[:5]
+    return render(request, "blog/base.html", {"posts": posts})
+
 
 
 @login_required
@@ -47,7 +54,7 @@ def profile(request):
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect("blog:profile")
+            return redirect("blog:base")
     else:
         form = UserUpdateForm(instance=request.user)
     return render(request, "blog/profile.html", {"form": form})
@@ -70,6 +77,14 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Provide a blank form for posting new comments
+        context['comment_form'] = CommentForm()
+        return context
+    
+    
 
 # CreateView - requires login
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -104,3 +119,48 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     
 
     
+
+# Comment create (function view)
+@login_required
+def comment_create(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return HttpResponseRedirect(reverse('blog:post_detail', args=[post.pk]) + f"#comment-{comment.pk}")
+    else:
+        form = CommentForm()
+    # On GET, redirect to post detail (posting UI is expected on detail page)
+    return redirect('blog:post_detail', pk=post.pk)
+
+
+
+# Comment update (class-based)
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.pk]) + f"#comment-{self.object.pk}"
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+
+# Comment delete (class-based)
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.pk])
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user

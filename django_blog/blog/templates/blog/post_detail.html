@@ -17,4 +17,53 @@
   {% endif %}
   <p><a href="{% url 'blog:post_list' %}">Back to posts</a></p>
 </article>
+
+<div class="card">
+  <h1>{{ post.title }}</h1>
+  <p class="post-meta">By {{ post.author.username }} — {{ post.published_date|date:"Y-m-d H:i" }}</p>
+  <div class="content">{{ post.content|linebreaks }}</div>
+</div>
+
+<!-- Comments List -->
+<div class="card mt-20">
+  <h2>Comments ({{ post.comments.count }})</h2>
+
+  {% for comment in post.comments.all %}
+    <div id="comment-{{ comment.pk }}" class="post-item">
+      <p class="post-meta">
+        <strong>{{ comment.author.username }}</strong> • {{ comment.created_at|date:"Y-m-d H:i" }}
+        {% if comment.updated_at and comment.updated_at|date:"U" > comment.created_at|date:"U" %}
+          (edited {{ comment.updated_at|date:"Y-m-d H:i" }})
+        {% endif %}
+      </p>
+      <p>{{ comment.content|linebreaks }}</p>
+
+      {% if user.is_authenticated and user == comment.author %}
+        <p>
+          <a class="btn" href="{% url 'blog:comment-update' comment.pk %}">Edit</a>
+          <a class="btn btn-danger" href="{% url 'blog:comment-delete' comment.pk %}">Delete</a>
+        </p>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+  {% endfor %}
+</div>
+
+<!-- New Comment Form -->
+{% if user.is_authenticated %}
+  <div class="card mt-20">
+    <h3>Leave a comment</h3>
+    <form method="post" action="{% url 'blog:comment-create' post.pk %}">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button type="submit" class="btn">Post comment</button>
+    </form>
+  </div>
+{% else %}
+  <div class="card mt-20">
+    <p><a href="{% url 'blog:login' %}">Log in</a> to post a comment.</p>
+  </div>
+{% endif %}
+
 {% endblock %}
