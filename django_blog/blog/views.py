@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.views import View
 from .forms import UserRegisterForm, UserUpdateForm
 from .models import Post, Comment
 
@@ -120,22 +121,26 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     
 
-# Comment create (function view)
-@login_required
-def comment_create(request, post_pk):
-    post = get_object_or_404(Post, pk=post_pk)
-    if request.method == 'POST':
+# Comment create (class-based view)
+class CommentCreateView(LoginRequiredMixin, View):
+    def post(self, request, post_pk):
+        post = get_object_or_404(Post, pk=post_pk)
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
             comment.save()
-            return HttpResponseRedirect(reverse('blog:post_detail', args=[post.pk]) + f"#comment-{comment.pk}")
-    else:
-        form = CommentForm()
-    # On GET, redirect to post detail (posting UI is expected on detail page)
-    return redirect('blog:post_detail', pk=post.pk)
+            # Redirect to post detail with anchor to new comment
+            return HttpResponseRedirect(
+                reverse('blog:post_detail', args=[post.pk]) + f"#comment-{comment.pk}"
+            )
+        # If invalid, just redirect back to post detail
+        return redirect('blog:post_detail', pk=post.pk)
+
+    def get(self, request, post_pk):
+        # On GET, redirect to post detail (form is shown there)
+        return redirect('blog:post_detail', pk=post_pk)
 
 
 

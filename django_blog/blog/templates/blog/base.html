@@ -21,6 +21,9 @@
                 <!-- HOME -->
                 <li><a href="{% url 'blog:base' %}">Home</a></li>
 
+                <!-- Comment -->
+                <li><a href="{% url 'blog:comment-create' post_pk=1 %}">New Comment</a></li>
+
                 <!-- BLOG POSTS -->
                 <li><a href="{% url 'blog:post_list' %}">Blog Posts</a></li>
 
