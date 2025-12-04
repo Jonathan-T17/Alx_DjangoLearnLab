@@ -11,7 +11,7 @@ from .views import (
 app_name = "blog"
 
 urlpatterns = [
-    # Authentication
+    # Authentication urls
     path("", base, name="base"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", UserLogoutView.as_view(), name="logout"),
@@ -19,7 +19,7 @@ urlpatterns = [
     path("profile/", profile, name="profile"),
 
 
-    # Blog post CRUD
+    # Blog post CRUD urls
     path('post/', PostListView.as_view(), name='post_list'),
     path('post/new/', PostCreateView.as_view(), name='post_create'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
