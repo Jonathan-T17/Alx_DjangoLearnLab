@@ -165,8 +165,8 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 # Comment create (class-based view)
 class CommentCreateView(LoginRequiredMixin, View):
-    def post(self, request, post_pk):
-        post = get_object_or_404(Post, pk=post_pk)
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -180,9 +180,9 @@ class CommentCreateView(LoginRequiredMixin, View):
         # If invalid, just redirect back to post detail
         return redirect('blog:post_detail', pk=post.pk)
 
-    def get(self, request, post_pk):
+    def get(self, request, pk):
         # On GET, redirect to post detail (form is shown there)
-        return redirect('blog:post_detail', pk=post_pk)
+        return redirect('blog:post_detail', pk=pk)
 
 
 
