@@ -20,6 +20,8 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 class PostViewSet(viewsets.ModelViewSet):
+    base_queryset = Post.objects.all()
+
     queryset = Post.objects.select_related("author").prefetch_related("comments").all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
@@ -44,6 +46,8 @@ class PostViewSet(viewsets.ModelViewSet):
         return self.get_paginated_response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
+    base_queryset = Comment.objects.all()
+
     queryset = Comment.objects.select_related("author", "post").all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
