@@ -9,7 +9,8 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'bio', 'profile_picture', 'followers']
+        fields = ['id', 'username', 'bio', 'profile_picture', 'followers', 'following']
+        read_only_fields = ['followers', 'following']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -24,7 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data.get("username"),
             password=validated_data.get("password"),
             bio=validated_data.get("bio", ""),
-            profile_picture=validated_data.get("profile_picture", "")
+            profile_picture=validated_data.get("profile_picture")
         )
         Token.objects.create(user=user)
         return user
