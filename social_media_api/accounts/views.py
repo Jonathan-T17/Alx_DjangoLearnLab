@@ -1,36 +1,28 @@
-from rest_framework import generics, permissions
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
-from .serializers import RegisterSerializer, UserSerializer
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+from .models import User
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
 
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-
-        user = authenticate(username=username, password=password)
-        if user is None:
-            return Response({"error": "Invalid username or password"}, status=400)
-
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key})
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
