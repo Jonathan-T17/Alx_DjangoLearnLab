@@ -128,3 +128,19 @@ Auth required.
 GET /api/feed/
 Auth required.
 Returns paginated posts from users the authenticated user follows, ordered by newest first.
+
+Likes & Notifications
+
+POST /api/posts/{id}/like/ — Auth required. Likes the post; returns 201 if newly liked or 200 if already liked. Creates a notification for the post author.
+
+POST /api/posts/{id}/unlike/ — Auth required. Removes like; returns 204 on success.
+
+GET /api/notifications/ — Auth required. Lists notifications for the authenticated user ordered by unread then newest.
+
+POST /api/notifications/{id}/mark-read/ — Auth required. Mark an individual notification as read.
+
+Model summary
+
+Like(post, user, created_at) — unique_together = (post, user)
+
+Notification(recipient, actor, verb, target_content_type, target_object_id, created_at, unread)

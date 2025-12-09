@@ -7,15 +7,17 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError, transaction
 
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from .permissions import IsOwnerOrReadOnly
 
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model
-from .serializers import PostSerializer
+from rest_framework import status
+from notifications.utils import create_notification
+
 
 
 User = get_user_model()
@@ -50,6 +52,34 @@ class PostViewSet(viewsets.ModelViewSet):
         page = self.paginate_queryset(comments)
         serializer = CommentSerializer(page, many=True, context={"request": request})
         return self.get_paginated_response(serializer.data)
+    
+
+    @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated], url_path="like")
+    def like(self, request, pk=None):
+        post = self.get_object()
+        user = request.user
+        try:
+            with transaction.atomic():
+                like, created = Like.objects.get_or_create(post=post, user=user)
+                if created:
+                    # notification is created by signal; if you prefer manual:
+                    # if post.author != user:
+                    #     create_notification(recipient=post.author, actor=user, verb="liked your post", target=post)
+                    serializer = LikeSerializer(like, context={"request": request})
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"detail": "Already liked."}, status=status.HTTP_200_OK)
+        except IntegrityError:
+            return Response({"detail": "Could not like post."}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated], url_path="unlike")
+    def unlike(self, request, pk=None):
+        post = self.get_object()
+        user = request.user
+        deleted, _ = Like.objects.filter(post=post, user=user).delete()
+        if deleted:
+            return Response({"detail": "Unliked."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
 class CommentViewSet(viewsets.ModelViewSet):
     base_queryset = Comment.objects.all()

@@ -4,6 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from notifications.utils import create_notification
 
 from .serializers import (
     RegisterSerializer,
@@ -61,6 +62,9 @@ class FollowUserView(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         request.user.following.add(target)
+        if target != request.user:
+            create_notification(recipient=target, actor=request.user, verb="started following you", target=request.user)
+            
         return Response({"detail": f"You are now following {target.username}."})
 
 

@@ -1,7 +1,7 @@
 # posts/serializers.py
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 User = get_user_model()
 
@@ -26,3 +26,13 @@ class PostSerializer(serializers.ModelSerializer):
         if len(value.strip()) < 3:
             raise serializers.ValidationError("Title must be at least 3 characters long.")
         return value.strip()
+
+
+
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ["id", "post", "user", "created_at"]
+        read_only_fields = ["id", "user", "created_at"]
