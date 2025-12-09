@@ -89,5 +89,5 @@ class UserFeedView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         # If user follows no one, return empty queryset
-        following_qs = user.following.all()
-        return Post.objects.filter(author__in=following_qs).select_related("author").prefetch_related("comments").order_by("-created_at")
+        following_users = user.following.all()
+        return Post.objects.filter(author__in=following_users).select_related("author").prefetch_related("comments").order_by("-created_at")
