@@ -16,6 +16,7 @@ class Notification(models.Model):
     target_content_type = models.ForeignKey(ContentType, null=True, blank=True, on_delete=models.CASCADE)
     target_object_id = models.CharField(max_length=255, null=True, blank=True)
     target = GenericForeignKey("target_content_type", "target_object_id")
+    timestamp = models.DateTimeField(default=timezone.now)
 
     created_at = models.DateTimeField(default=timezone.now)
     unread = models.BooleanField(default=True)
