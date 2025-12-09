@@ -12,6 +12,12 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
+from .serializers import PostSerializer
+
+
 User = get_user_model()
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -67,3 +73,21 @@ class CommentViewSet(viewsets.ModelViewSet):
             post_id = self.request.parser_context["kwargs"]["post_id"]
             post = get_object_or_404(Post, pk=post_id)
         serializer.save(author=self.request.user, post=post)
+
+
+
+
+class UserFeedView(ListAPIView):
+    """
+    Returns posts authored by users the current user follows,
+    ordered by newest first.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination  # reuse existing pagination
+
+    def get_queryset(self):
+        user = self.request.user
+        # If user follows no one, return empty queryset
+        following_qs = user.following.all()
+        return Post.objects.filter(author__in=following_qs).select_related("author").prefetch_related("comments").order_by("-created_at")

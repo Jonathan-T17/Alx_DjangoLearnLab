@@ -48,3 +48,6 @@ class PostCommentAPITest(APITestCase):
         self.client.login(username="user2", password="pass123")
         resp = self.client.post(url, {"post": self.post.id, "content": "Great!"})
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+
+

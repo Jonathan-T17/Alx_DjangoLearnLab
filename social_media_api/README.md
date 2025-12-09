@@ -1,4 +1,4 @@
-# Social Media API:
+# Social Media API
 
  Task 0: Project Setup & User Authentication
 
@@ -59,7 +59,7 @@ POST /accounts/register/
   "username": "jon",
   "password": "mypassword123",
   "bio": "Hello world!",
-  "profile_picture":  "https://example.com/me.jpg"
+  "profile_picture":  "<https://example.com/me.jpg>"
 }
 
 Login
@@ -70,7 +70,6 @@ POST /accounts/login/
   "password": "mypassword123"
 }
 
-
 Returns a token.
 
 Profile
@@ -80,13 +79,52 @@ Authorization: Token <your_token>
 
 GET /accounts/profile/
 
-📁 Project Structure
-social_media_api/
-    accounts/
-        models.py
-        views.py
-        serializers.py
-        urls.py
-    social_media_api/
-        settings.py
-        urls.py
+## Posts & Comments API
+
+Base: /api/
+
+### Posts
+
+- GET /api/posts/ — list posts (supports search/filter/order/pagination)
+- POST /api/posts/ — create post (auth required)
+- GET /api/posts/{id}/ — retrieve
+- PUT/PATCH /api/posts/{id}/ — update (owner only)
+- DELETE /api/posts/{id}/ — delete (owner only)
+- GET /api/posts/{id}/comments/ — list post comments
+
+### Comments
+
+- GET /api/comments/ — list comments
+- POST /api/comments/ — create comment (auth required, include `"post": <id>`)
+- PUT/PATCH/DELETE /api/comments/{id}/ — modify/delete (owner only)
+
+Authentication: Token (Authorization: Token :key)or session.
+
+## Follow & Feed endpoints
+
+### Follow a user
+
+POST /accounts/follow/{user_id}/
+Auth required (session or token).
+Response: 200 OK on success.
+
+### Unfollow a user
+
+POST /accounts/unfollow/{user_id}/
+Auth required.
+
+### List followers
+
+GET /accounts/followers/{user_id}/
+Auth required.
+
+### List following
+
+GET /accounts/following/{user_id}/
+Auth required.
+
+### User feed
+
+GET /api/feed/
+Auth required.
+Returns paginated posts from users the authenticated user follows, ordered by newest first.

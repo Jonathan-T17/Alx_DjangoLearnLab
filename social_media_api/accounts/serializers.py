@@ -50,3 +50,15 @@ class LoginSerializer(serializers.Serializer):
         data["token"] = token.key
 
         return data
+
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    """Minimal info for user in follow responses."""
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name")
+
+class FollowActionSerializer(serializers.Serializer):
+    """Serializer for follow/unfollow action (no model save)."""
+    target_user_id = serializers.IntegerField()

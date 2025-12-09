@@ -8,8 +8,17 @@ class User(AbstractUser):
     followers = models.ManyToManyField(
         "self",
         symmetrical=False,
-        related_name="following",
+        related_name="user_following",
         blank=True
+    )
+
+    # Users that THIS user follows
+    following = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="user_followers",
+        blank=True,
+        help_text="Users this user follows (asymmetric relationship)."
     )
 
     def __str__(self):
