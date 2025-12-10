@@ -67,7 +67,7 @@ class PostViewSet(viewsets.ModelViewSet):
         try:
             with transaction.atomic():
                 # Required explicit usage:
-                like, created = Like.objects.get_or_create(user=user, post=post)
+                like, created = Like.objects.get_or_create(user=request.user, post=post)
 
                 if created:
                     # Required explicit usage:
