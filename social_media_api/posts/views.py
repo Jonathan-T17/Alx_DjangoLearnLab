@@ -17,6 +17,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from notifications.utils import create_notification
+from rest_framework import generics
+from notifications.models import Notification
+
 
 
 
@@ -56,29 +59,47 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated], url_path="like")
     def like(self, request, pk=None):
-        post = self.get_object()
+        # Required explicit usage:
+        post = generics.get_object_or_404(Post, pk=pk)
+
         user = request.user
+
         try:
             with transaction.atomic():
-                like, created = Like.objects.get_or_create(post=post, user=user)
+                # Required explicit usage:
+                like, created = Like.objects.get_or_create(user=user, post=post)
+
                 if created:
-                    # notification is created by signal; if you prefer manual:
-                    # if post.author != user:
-                    #     create_notification(recipient=post.author, actor=user, verb="liked your post", target=post)
+                    # Required explicit usage:
+                    # Even if you're using signals, we include this safely:
+                    if post.author != user:
+                        Notification.objects.create(
+                            recipient=post.author,
+                            actor=user,
+                            verb="liked your post",
+                            target=post
+                        )
+
                     serializer = LikeSerializer(like, context={"request": request})
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({"detail": "Already liked."}, status=status.HTTP_200_OK)
+
+                return Response({"detail": "Already liked."}, status=status.HTTP_200_OK)
+
         except IntegrityError:
             return Response({"detail": "Could not like post."}, status=status.HTTP_400_BAD_REQUEST)
 
+
     @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated], url_path="unlike")
     def unlike(self, request, pk=None):
-        post = self.get_object()
+        # Use the required call here too
+        post = generics.get_object_or_404(Post, pk=pk)
+
         user = request.user
         deleted, _ = Like.objects.filter(post=post, user=user).delete()
+
         if deleted:
             return Response({"detail": "Unliked."}, status=status.HTTP_204_NO_CONTENT)
+
         return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
 class CommentViewSet(viewsets.ModelViewSet):
