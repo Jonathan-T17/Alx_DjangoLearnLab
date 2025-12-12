@@ -22,6 +22,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # NEVER use DEBUG=True in production
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
+DEBUG = False
 
 # Correct ALLOWED_HOSTS syntax
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
